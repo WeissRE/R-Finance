@@ -1,0 +1,37 @@
+# Duration Calculation
+
+#Inputs
+c<-1
+n<-10
+P<-1
+
+#Duration Function
+dur<-function(c,y,n)
+{
+  # create the PV of the payments
+  payments<-c*exp(-seq(1:n)*y)
+  #find the total bond price
+  price<-sum(payments)
+  # find the weights
+  weights<-payments / price
+  # duration
+  return(sum(weights*seq(1:n)))
+
+}
+
+#initial guess
+y<-rep(0,10000)
+y[1]<-0
+
+#Newton Raphson for y
+for (i in 1:9999) y[i+1] = y[i] + 1/dur(c,y[i],n) - P/(c*sum(seq(1:n)*exp(-seq(1:n)*y[i])))
+
+#y solution
+y[1000]
+
+#solution visualization
+plot(y,col="blue")
+
+#Proof
+x<-c*sum(exp(-seq(1:n)*y[1000]))-P
+x
